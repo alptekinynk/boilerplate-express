@@ -1,9 +1,11 @@
 let express = require('express');
 let app = express();
-
+const bodyParser = require("body-parser");
+  
 console.log("Hello World");
 
 app.use("/public", express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: false}));
 
 //root lvl middleware
 app.use((request, res, next) =>{
@@ -25,7 +27,7 @@ app.get("/json", function(req, res) {
     res.json({"message": "Hello json"});
   }
 });
-//comment
+
 app.get(
   "/now", 
   (req, res, next) => {
@@ -46,12 +48,21 @@ app.get("/:word/echo", (req, res)=>{
   });
 });
 
+app.get("/name", (req, res) =>{
+  var firstname = req.query.first;
+  var lastname = req.query.last;
+
+  res.json({
+    name: firstname + " " + lastname
+  });
+});
 
 
-
-
-
-
+app.post("/name", bodyParser.urlencoded({ extended: false}),(req, res) => {
+          var string = req.body.first + " " + req.body.last;
+          console.log(string);
+          res.json({name: string});
+         });
 
 
 
